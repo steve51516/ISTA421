@@ -41,6 +41,12 @@ namespace EX09
                             getNewUser();
                             break;
                         case 2:
+                            Console.WriteLine("Enter username you would like to authenticate");
+                            Console.Write("Username: ");
+
+                            string authName = Console.ReadLine();
+                            if (authName != null && authName != "")
+                                authUser(authName);
                             break;
                         case 3:
                             Console.Clear();
@@ -48,6 +54,7 @@ namespace EX09
                             exitCond = false;
                             break;
                         default:
+                            Console.Clear();
                             GetSelection();
                             break;
                     }
@@ -57,6 +64,38 @@ namespace EX09
                     Console.Clear();
                     Console.WriteLine("You must enter the number 1, 2, or 3.\n");
                 }
+            }
+        }
+        static void authUser(string userName)
+        {
+            if (!passDB.ContainsKey(userName))
+                Console.WriteLine($"Username \"{userName}\" does not exist.");
+            else if (passDB.ContainsKey(userName))
+            {
+                string secret;
+                string testHash;
+                int tryCount = 4;
+
+                do
+                {
+                    secret = HidePassInput();
+
+                    SHA256 sha256Hash = SHA256.Create();
+                    testHash = GetHash(sha256Hash, secret);
+                    Console.WriteLine(testHash);
+                    if (passDB.TryGetValue(userName, out testHash))
+                    {
+                        Console.WriteLine(testHash);
+                        Console.WriteLine($"Successfully authenticated as {userName}\n");
+                        tryCount = 0;
+                    }
+                    else
+                    {
+                        tryCount--;
+                        Console.WriteLine($"Failed to autheticate as {userName}. {tryCount} more tries left.\n");
+                    }
+                    
+                } while (tryCount > 0);
             }
         }
         static void getNewUser()
@@ -94,7 +133,6 @@ namespace EX09
             string tempSecret;
             while (secret == "")
             {
-                Console.Write("Enter your secret password: ");
                 tempSecret = HidePassInput();
 
                 if (tempSecret == "" || tempSecret == null)
@@ -141,9 +179,11 @@ namespace EX09
             // Return the hexadecimal string.
             return sBuilder.ToString();
         }
-        static string HidePassInput()
+        static string HidePassInput() // Hides text entered from displaying on the console
         {
             string secret = null;
+            Console.Write("\nEnter password: ");
+
             try
             {
                 while (true)
@@ -153,6 +193,7 @@ namespace EX09
                         break;
                     secret += key.KeyChar;
                 }
+                Console.WriteLine("");
             }
             catch (Exception)
             {
