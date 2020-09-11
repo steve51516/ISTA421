@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EX09
 {
     public class Passwd
     {
-        private static Dictionary<string, string> passDB = new Dictionary<string, string>();
+        private static SortedDictionary<string, string> passDB = new SortedDictionary<string, string>();
 
         public static void GetSelection()
         {
@@ -41,12 +42,7 @@ namespace EX09
                             getNewUser();
                             break;
                         case 2:
-                            Console.WriteLine("Enter username you would like to authenticate");
-                            Console.Write("Username: ");
-
-                            string authName = Console.ReadLine();
-                            if (authName != null && authName != "")
-                                authUser(authName);
+                            authUser();
                             break;
                         case 3:
                             Console.Clear();
@@ -66,37 +62,42 @@ namespace EX09
                 }
             }
         }
-        static void authUser(string userName)
+        static void authUser()
         {
-            if (!passDB.ContainsKey(userName))
-                Console.WriteLine($"Username \"{userName}\" does not exist.");
-            else if (passDB.ContainsKey(userName))
-            {
-                string secret;
-                string testHash;
-                int tryCount = 4;
+            Console.Clear();
+            Console.WriteLine("Enter username you would like to authenticate");
+            Console.Write("Username: ");
+            string userName = "";
+            string tryName = Console.ReadLine();
+            if (tryName != null && tryName != "")
+                userName = tryName;
 
+            if (passDB.ContainsKey(userName))
+            {
+                int authAttempts = 3;
                 do
                 {
-                    secret = HidePassInput();
-
+                    string secret = HidePassInput();
                     SHA256 sha256Hash = SHA256.Create();
-                    testHash = GetHash(sha256Hash, secret);
-                    Console.WriteLine(testHash);
-                    if (passDB.TryGetValue(userName, out testHash))
+                    string secretHash = GetHash(sha256Hash, secret);
+                    string realSecret;
+                    passDB.TryGetValue(userName, out realSecret);
+
+                    if (secretHash == realSecret)
                     {
-                        Console.WriteLine(testHash);
-                        Console.WriteLine($"Successfully authenticated as {userName}\n");
-                        tryCount = 0;
+                        Console.WriteLine($"You have successfully authenticated as {userName}");
+                        authAttempts = -1;
                     }
                     else
                     {
-                        tryCount--;
-                        Console.WriteLine($"Failed to autheticate as {userName}. {tryCount} more tries left.\n");
+                        authAttempts--;
+                        if (authAttempts != 0)
+                            Console.WriteLine($"Incorrect password. You have {authAttempts} tries left.");
                     }
-                    
-                } while (tryCount > 0);
+                } while (authAttempts > 0);
             }
+            else
+                Console.WriteLine($"Username \"{userName}\" does not exist.");
         }
         static void getNewUser()
         {
