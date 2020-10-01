@@ -47,19 +47,27 @@ namespace Quiz22
         }
         public static Circle operator+(Circle a, Circle b)
         {
-            Circle circle = new Circle(a.radius + b.radius);
+            Circle circle = new Circle();
+            circle.area = a.area + b.area;
+            circle.radius = Math.PI * (circle.area * circle.area);
+            circle.circumference = 2 * Math.PI * circle.radius;
+
             return circle;
         }
         public static Circle operator -(Circle a, Circle b)
         {
-            var circAdded = (a.radius + b.radius);
-            var twentyPercent = 0.20 * circAdded;
-            Circle circle = new Circle(circAdded - twentyPercent);
+            Circle circle = new Circle();
+            circle.area = a.area - b.area;
+            circle.radius = Math.PI * (circle.area * circle.area);
+            circle.circumference = 2 * Math.PI * circle.radius;
             return circle;
         }
         public static Circle operator *(Circle a, Circle b)
         {
-            Circle circle = new Circle(a.radius * b.radius);
+            Circle circle = new Circle();
+            circle.area = a.area * b.area;
+            circle.radius = Math.PI * (circle.area * circle.area);
+            circle.circumference = 2 * Math.PI * circle.radius;
             return circle;
         }
         public override string ToString() => $"I am a Circle. My radious is {radius}, my area is {area}, and my circumference is {circumference}";
