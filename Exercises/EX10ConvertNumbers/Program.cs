@@ -8,7 +8,9 @@ namespace EX10ConvertNumbers
         {
             while (true)
             {
-                Console.Write("Enter Q to exit or N to continue: ");
+                Console.WriteLine("Press any key to continue.\n");
+                Console.WriteLine("Press Q to exit.");
+                Console.Write("Enter: ");
                 string input = "";
                 try
                 {
@@ -38,11 +40,11 @@ namespace EX10ConvertNumbers
 
                 string n1 = "";
                 bool success;
-                int number = 0;
+                long number = 0;
                 try
                 {
                     n1 = Console.ReadLine();
-                    success = int.TryParse(n1, out number);
+                    success = long.TryParse(n1, out number);
 
                     if (success)
                         Console.WriteLine($"Number: {number} base: {from}\n");
@@ -54,9 +56,8 @@ namespace EX10ConvertNumbers
                     Console.WriteLine(ex);
                 }
 
-
-                long result = 0;
-                string str_result = "";
+                string result = "";
+                long longResult = 0;
 
                 switch (from)
                 {
@@ -65,33 +66,33 @@ namespace EX10ConvertNumbers
                         Console.WriteLine($"binary conversion is {result}");
                         result = Util.dec2oct(number);
                         Console.WriteLine($"octal conversion is {result}");
-                        str_result = Util.dec2hex(number);
-                        Console.WriteLine($"hex conversion is {str_result}");
+                        result = Util.dec2hex(number);
+                        Console.WriteLine($"hex conversion is {result}");
                         break;
                     case 2:
-                        result = Util.bin2dec(number);
-                        Console.WriteLine($"decimal conversion result is {result}");
-                        result = Util.bin2oct(number);
-                        Console.WriteLine($"octal conversion is {result}");
-                        str_result = Util.bin2hex(number);
-                        Console.WriteLine($"hex conversion is {str_result}");
+                        longResult = Util.bin2dec(n1);
+                        Console.WriteLine($"decimal conversion result is {longResult}");
+                    //    result = Util.bin2oct(number);
+                    //    Console.WriteLine($"octal conversion is {result}");
+                    //    str_result = Util.bin2hex(number);
+                    //    Console.WriteLine($"hex conversion is {str_result}");
                         break;
                     case 8:
-                        result = Util.oct2bin(number);
-                        Console.WriteLine($"binary conversion is {result}");
-                        result = Util.oct2dec(number);
-                        Console.WriteLine($"decimal conversion is {result}");
-                        str_result = Util.oct2hex(number);
-                        Console.WriteLine($"hex conversion is {str_result}");
-                        break;
-                    case 16:
-                        result = Util.hex2bin(n1);
-                        Console.WriteLine($"binary conversion is {result}");
-                        result = Util.hex2oct(n1);
-                        Console.WriteLine($"octal conversion is {result}");
-                        result = Util.hex2dec(n1);
-                        Console.WriteLine($"decimal conversion is {result}");
-                        break;
+                    //    result = Util.oct2bin(number);
+                    //    Console.WriteLine($"binary conversion is {result}");
+                    //    result = Util.oct2dec(number);
+                    //    Console.WriteLine($"decimal conversion is {result}");
+                    //    str_result = Util.oct2hex(number);
+                    //    Console.WriteLine($"hex conversion is {str_result}");
+                    //    break;
+                    //case 16:
+                    //    result = Util.hex2bin(n1);
+                    //    Console.WriteLine($"binary conversion is {result}");
+                    //    result = Util.hex2oct(n1);
+                    //    Console.WriteLine($"octal conversion is {result}");
+                    //    result = Util.hex2dec(n1);
+                    //    Console.WriteLine($"decimal conversion is {result}");
+                    //    break;
                     default:
                         Console.WriteLine("Error in base to convert from.");
                         break;
