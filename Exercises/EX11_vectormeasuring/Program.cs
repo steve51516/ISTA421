@@ -79,17 +79,6 @@ namespace EX11_vectormeasuring
 
                 Dictionary<int[], double> pointDistances = CompareDistance(pointPairs);
                 ListDistances(pointDistances);
-                //for (int i = 0, j = 0; i < pointPairs.Length; i++, j++)
-                //{
-                //    if (j >= 2)
-                //        j = 0;
-                //    if (j == 0)
-                //        Console.Write("x: ");
-                //    else
-                //        Console.Write("y: ");
-                //    Console.WriteLine(pointPairs[i][j]);
-
-                //}
             }
             internal Dictionary<int[], double> CompareDistance(int[][] pointPairs)
             {
