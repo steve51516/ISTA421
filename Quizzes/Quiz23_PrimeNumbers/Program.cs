@@ -50,9 +50,6 @@ namespace Quiz23_PrimeNumbers
             }
             TimeSpan tsSingle = sw.Elapsed;
 
-
-
-
             Console.WriteLine("PRINTING PRIMES FROM MULTI THREAD");
             foreach (int element in primesMultiThread)
                 Console.Write($" {element} ");

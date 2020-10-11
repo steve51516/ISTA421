@@ -55,62 +55,86 @@ namespace EX11_vectormeasuring
             public int y { get; set; }
             internal void CalcPairs()
             {
-                int[] ranNums = CalcRandom();
                 Random random = new Random();
                 List<int[]> points = new List<int[]>();
-                Dictionary<int, int> keyValuePairs = new Dictionary<int, int>();
-                
-                for (int i = 0; i < ranNums.Length / 2; i++)
-                {
-                    int[] x =
-                {
-                    ranNums[random.Next(100)],
-                    ranNums[random.Next(100)]
-                };
-                    int[] y =
-                {
-                    ranNums[random.Next(100)],
-                    ranNums[random.Next(100)]
-                };
-                    points.Add(x);
-                    points.Add(y);
-                }
-                int[][] pointPairs = points.ToArray();
 
-                Dictionary<int[], double> pointDistances = CompareDistance(pointPairs);
-                ListDistances(pointDistances);
-            }
-            internal Dictionary<int[], double> CompareDistance(int[][] pointPairs)
-            {
-                Dictionary<int[], double> pointDistances = new Dictionary<int[], double>();
-                for (int i = 0; i < pointPairs.Length - 1; i++)
+                for (int i = 0; i < 100; i++)
                 {
-                    pointDistances.Add(pointPairs[i], CalcDistance(pointPairs[i][0], pointPairs[i][1], pointPairs[i + 1][0], pointPairs[i + 1][1]));
+                    int[] xyPair =
+                            {
+                                random.Next(100),
+                                random.Next(100)
+                            };
+                    points.Add(xyPair);
                 }
-                return pointDistances;
+                ListPoints(points);
+                Console.WriteLine("\n=========================================================================================\n");
+                CompareDistance(points);
             }
-            internal void ListDistances(Dictionary<int[], double> pointDistances)
+            internal void CompareDistance(List<int[]> pointsList)
             {
-                int[][] points = pointDistances.Keys.ToArray();
-                List<double> distances = pointDistances.Values.ToList();
-                for (int i = 0; i < pointDistances.Count - 1; i++)
-                    Console.WriteLine($"Points: ({points[i][0]},{points[i][1]}) | ({points[i + 1][0]},{points[i + 1][1]}) distance: {distances[i]}");
+                int[][] points = pointsList.ToArray();
+                double closest = CalcDistance(points[0][0], points[0][1], points[1][0], points[1][1]);
+                double possibleClosest = 0;
+                for (int i = points.Length - 1; i >= 0; i--)
+                {
+                    for (int j = 0; j < points.Length; j++)
+                    {
+                        possibleClosest = CalcDistance(points[i][0], points[i][1], points[j][0], points[j][1]);
+                        if (possibleClosest < closest && possibleClosest != 0)
+                        {
+                            closest = possibleClosest;
+                            Console.WriteLine($"Pairs: {points[i][0]},{points[i][1]} and {points[j][0]},{points[j][1]} Distance: {closest}");
+                        }
+                    }
+                    
+                }
             }
-            internal int[] CalcRandom()
+            internal void ListPoints(List<int[]> pointsList)
             {
-                int[] points = new int[100];
-                Random random = new Random();
+                int[][] points = pointsList.ToArray();
                 for (int i = 0; i < points.Length; i++)
-                    points[i] = random.Next(1, 101);
-                return points;
+                {
+                    Console.WriteLine($"{points[i][0]}, {points[i][1]}");
+                }
             }
-            internal double CalcDistance(int x1, int y1, int x2, int y2) => ((x1 - 1) * (y1 - 1)) + ((x2 - 1) * (y2 - 1));
+            internal double CalcDistance(int x1, int y1, int x2, int y2) => Math.Sqrt(((x1 - x2) * (x1 - x2)) + ((y2 - y1) * (y2 - y1)));
         }
         struct Datum3
         {
             internal void CalcDist()
             {
-                throw new NotImplementedException();
+                Random random = new Random();
+                int[][] xyz = new int[1000][];
+                for (int i = 0; i < xyz.Length; i++)
+                {
+                    xyz[i] = new int[3];
+                }
+
+                for (int i = 0, j = 0; i < xyz.Length; i++)
+                {
+                    while (j < 3)
+                    {
+                        xyz[i][j] = random.Next(1000);
+                        j++;
+                    }
+                    j = 0;
+                }
+                double closest = Math.Sqrt((xyz[0][0] * xyz[0][0]) + (xyz[0][1] * xyz[0][1]) + (xyz[0][2] * xyz[0][2]));
+                double possibleClosest = 0;
+                for (int i = xyz.Length - 1; i >= 0; i--)
+                {
+                    
+                    for (int j = 0; j < xyz.Length; j++)
+                    {
+                        possibleClosest = Math.Sqrt((xyz[i][0] * xyz[i][0]) + (xyz[i][1] * xyz[i][1]) + (xyz[i][2] * xyz[i][2]));
+                        if (possibleClosest < closest && possibleClosest != 0)
+                        {
+                            closest = possibleClosest;
+                            Console.WriteLine($"points: {xyz[i][0]},{xyz[i][1]},{xyz[i][2]} Distance: {closest}");
+                        }
+                    }
+                }
             }
         }
     }
