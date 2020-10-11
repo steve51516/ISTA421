@@ -1,0 +1,21 @@
+C# Quiz 23
+Enter the highest number to find the primes: 1000000
+
+Unhandled Exception: System.AggregateException: One or more errors occurred. ---> System.ArgumentException: Destination array was not long enough. Check destIndex and length, and the array's lower bounds.
+   at System.Array.Copy(Array sourceArray, Int32 sourceIndex, Array destinationArray, Int32 destinationIndex, Int32 length, Boolean reliable)
+   at System.Collections.Generic.List`1.set_Capacity(Int32 value)
+   at System.Collections.Generic.List`1.EnsureCapacity(Int32 min)
+   at System.Collections.Generic.List`1.Add(T item)
+   at Quiz23_PrimeNumbers.Program.<>c__DisplayClass0_0.<Main>b__0(Int64 x) in E:\steve\Documents\Quantico06\ISTA421\Quizzes\Quiz23_PrimeNumbers\Program.cs:line 37
+   at System.Threading.Tasks.Parallel.<>c__DisplayClass18_0`1.<ForWorker64>b__1()
+   at System.Threading.Tasks.Task.InnerInvoke()
+   at System.Threading.Tasks.Task.InnerInvokeWithArg(Task childTask)
+   at System.Threading.Tasks.Task.<>c__DisplayClass176_0.<ExecuteSelfReplicating>b__0(Object <p0>)
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task.ThrowIfExceptional(Boolean includeTaskCanceledExceptions)
+   at System.Threading.Tasks.Task.Wait(Int32 millisecondsTimeout, CancellationToken cancellationToken)
+   at System.Threading.Tasks.Task.Wait()
+   at System.Threading.Tasks.Parallel.ForWorker64[TLocal](Int64 fromInclusive, Int64 toExclusive, ParallelOptions parallelOptions, Action`1 body, Action`2 bodyWithState, Func`4 bodyWithLocal, Func`1 localInit, Action`1 localFinally)
+   at System.Threading.Tasks.Parallel.For(Int64 fromInclusive, Int64 toExclusive, Action`1 body)
+   at Quiz23_PrimeNumbers.Program.Main(String[] args) in E:\steve\Documents\Quantico06\ISTA421\Quizzes\Quiz23_PrimeNumbers\Program.cs:line 32
+Press any key to continue . . .
