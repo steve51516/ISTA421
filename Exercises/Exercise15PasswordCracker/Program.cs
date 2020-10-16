@@ -22,13 +22,24 @@ namespace Exercise15PasswordCracker
             {
                 Console.WriteLine(ex);
             }
+
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            string crackedPassword = Util.BruteForceCrack(userPassword);
+            string crackedPassword = Util.BruteForceSingleThread(userPassword);
             stopwatch.Stop();
             TimeSpan time = stopwatch.Elapsed;
+            stopwatch.Reset();
+            Console.WriteLine("Single Threaded Cracking: ");
             Console.WriteLine($"Cracked password in {time} amount of time.");
             Console.WriteLine($"Password is: {crackedPassword}");
+
+            stopwatch.Start();
+            string secondPassword = Util.BruteForceMultiThread(userPassword);
+            stopwatch.Stop();
+            time = stopwatch.Elapsed;
+            Console.WriteLine("Multi Threaded Cracking: ");
+            Console.WriteLine($"Cracked password in {time} amount of time.");
+            Console.WriteLine($"Password is: {secondPassword}");
         }
     }
     static class Util
@@ -42,7 +53,7 @@ namespace Exercise15PasswordCracker
 
             return allCharacters;
         }
-        static public string BruteForceCrack(string userPass)
+        static public string BruteForceMultiThread(string userPass)
         {
             char[] allCharacters = generateCombos();
 
@@ -54,6 +65,57 @@ namespace Exercise15PasswordCracker
             bool foundPass = true;
             int failedCounter = 0;
             List<int> failedLocations = new List<int>();
+
+            Parallel.For(0, userPass.Length, x =>
+            {
+                int j = 0;
+                int k = 0;
+                while (foundPass)
+                {
+                    if (j >= allCharacters.Length)
+                    {
+                        foundPass = false;
+                        failedCounter++;
+                        failedLocations.Add(x);
+                        stringBuilder.Append(" ");
+                    }
+                    else if (userPass[x] == allCharacters[j])
+                    {
+                        lock (stringBuilder)
+                        {
+                            stringBuilder.Append(allCharacters[j]);
+                            foundPass = false;
+                        }
+
+                    }
+                    else if (k < nums.Length && userPass[x] == nums[k])
+                    {
+                        lock (stringBuilder)
+                        {
+                            stringBuilder.Append(nums[k]);
+                            foundPass = false;
+                        }
+                    }
+                    j++;
+                    if (k < nums.Length)
+                        k++;
+                }
+                foundPass = true;
+            });
+            return stringBuilder.ToString();
+        }
+        static public string BruteForceSingleThread(string userPass)
+        {
+            char[] allCharacters = generateCombos();
+            int[] nums = new int[9];
+            for (int i = 0; i < nums.Length; i++)
+                nums[i] = i;
+
+            StringBuilder stringBuilder = new StringBuilder();
+            bool foundPass = true;
+            int failedCounter = 0;
+            List<int> failedLocations = new List<int>();
+
             for (int i = 0, j = 0, k = 0; i < userPass.Length; i++)
             {
                 while (foundPass)
@@ -74,7 +136,7 @@ namespace Exercise15PasswordCracker
                     {
                         stringBuilder.Append(nums[k]);
                         foundPass = false;
-                    }    
+                    }
                     j++;
                     if (k < nums.Length)
                         k++;
