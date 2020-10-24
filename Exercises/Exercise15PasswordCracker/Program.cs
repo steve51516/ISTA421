@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.SqlServer.Server;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace Exercise15PasswordCracker
 {
@@ -22,12 +24,21 @@ namespace Exercise15PasswordCracker
             {
                 Console.WriteLine(ex);
             }
-
+            // Use method #1 single thread cracking
+            Util util = new Util();
             Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            util.CreatePasswords(string.Empty);
+            stopwatch.Stop();
+            TimeSpan time = stopwatch.Elapsed;
+            stopwatch.Reset();
+            Console.WriteLine($"Cracked password in {time} amount of time.");
+
+            // Use method 2 single and multi thread cracking
             stopwatch.Start();
             string crackedPassword = Util.BruteForceSingleThread(userPassword);
             stopwatch.Stop();
-            TimeSpan time = stopwatch.Elapsed;
+            time = stopwatch.Elapsed;
             stopwatch.Reset();
             Console.WriteLine("Single Threaded Cracking: ");
             Console.WriteLine($"Cracked password in {time} amount of time.");
@@ -42,8 +53,46 @@ namespace Exercise15PasswordCracker
             Console.WriteLine($"Password is: {secondPassword}");
         }
     }
-    static class Util
+    }
+    class Util
     {
+        public string generateCombosString()
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 32; i < 126; i++)
+                sb.Append((char)i);
+            return sb.ToString();
+        }
+
+        public char firstchar = (char)32;
+        public char lastchar = (char)126;
+        public int passwordLength = 2;
+        public long tries = 0;
+        public bool done = false;
+        public string password = "pa";
+
+        // Function for brute forcing
+        public void CreatePasswords(string keys)
+        {
+            Console.WriteLine($"Trying: {keys} attempt: {tries}");
+            if (keys == password)
+            { // Check if the password is a match
+                done = true;
+            }
+
+            if (keys.Length > passwordLength || done == true)
+            {
+                // This occurs if the user put in invalid characters or when it found a match
+                return;
+            }
+
+            // Recursively create passwords
+            for (char c = firstchar; c <= lastchar; c++)
+            {
+                tries++;
+                CreatePasswords(keys + c);
+            }
+        }
         static char[] generateCombos()
         {
             char[] allCharacters = new char[103];
@@ -158,4 +207,3 @@ namespace Exercise15PasswordCracker
             return stringBuilder.ToString();
         }
     }
-}
