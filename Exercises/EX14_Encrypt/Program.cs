@@ -59,6 +59,8 @@ namespace EX14_Encrypt
                 Console.WriteLine($"Decrypted cypher message is: {decryptedString}\n");
                 Console.WriteLine($"Encrypted cypher message with word key is: {encryptStringWordKey}\n");
                 Console.WriteLine($"Decrypted cypher message with word key is: {decryptStringWordKey}\n");
+                Console.Write("Press enter to continue: ");
+                Console.ReadLine();
             }
         }
     }
@@ -127,24 +129,29 @@ namespace EX14_Encrypt
 
             return sb.ToString();
         }
-        static public string cryptStringKey(string plainText, string strKey, string crypt)
+        static public int[] createStrKey(char[] plainText, string strKey)
         {
-            char[] textArr = plainText.ToCharArray();
-            string upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; string lowerChars = "abcdefghijklmnopqrustuvwxyz";
+            char[] upperChars = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'W', 'Z' };
+            //string lowerChars = "abcdefghijklmnopqrustuvwxyz";
 
             int[] shiftPlaces = new int[strKey.Length];
             for (int i = 0; i < plainText.Length; i++)
             {
-                for (int j = 0; j < plainText.Length; j++)
+                for (int j = 0; j < upperChars.Length; j++)
                 {
-                    if (strKey[i] == upperChars[j] || strKey[i] == lowerChars[j])
+                    if (strKey[i] == upperChars[j])
                     {
                         shiftPlaces[i] = j;
+                        j = upperChars.Length;
                     }
-                    if (j == upperChars.Length)
-                        j = plainText.Length;
                 }
             }
+            return shiftPlaces;
+        }
+        static public string cryptStringKey(string plainText, string strKey, string crypt)
+        {
+            char[] textArr = plainText.ToCharArray();
+            int[] shiftPlaces = createStrKey(plainText.ToUpper().ToCharArray(), strKey);
 
             if (crypt == "encrypt")
             {
@@ -191,7 +198,7 @@ namespace EX14_Encrypt
                 sb.Append(letter);
             return sb.ToString();
         }
-        public static string RemoveBadChars(string word) // Removes all non alphabetical characters
+        public static string RemoveBadChars(string word)
         {
             Regex reg = new Regex("[^a-zA-Z']");
             return reg.Replace(word, string.Empty);
